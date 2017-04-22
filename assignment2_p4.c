@@ -16,11 +16,13 @@ void freeMatricies(double* matricies[], int rows, int cols);
 void outputResults(double cpuTimes[], double* matricies[], int rows, int cols);
 void outputMatrix(double* M, int n);
 void reportStats(double* model, double* sample, int n);
+void fillZero(double arr[], int n);
 
 const int NUM_OPS = 3; // Number of different types of matrix multiplication
 const int NUM_TESTS = 4; // Number of different test sizes
 const int MIN_SIZE = 1000; // The minimum dimension for the matrix
 const int STEP_SIZE = 500; // The amount to increase the dimension per test
+const int NUM_RUNS = 30; // The number of runs to average the results by
 
 int main(void) {
     srand(time(NULL));
@@ -36,30 +38,54 @@ int main(void) {
     double cpuTimes[NUM_TESTS * NUM_OPS];
     double* cMatricies[NUM_TESTS * NUM_OPS];
 
+    fillZero(cpuTimes, NUM_TESTS * NUM_OPS);
     // For each test case compute the multiplication of random matricies
     // using different matrix muliplication procedures. Record the resulting
     // matrix as well as the time in took for each multiplication.
-    for(n = 0; n < NUM_TESTS; ++n) {
-        int matrixSize = n * STEP_SIZE + MIN_SIZE;
-        double* A = malloc(sizeof(double) * matrixSize * matrixSize);
-        double* B = malloc(sizeof(double) * matrixSize * matrixSize);
-        randMatrix(A, matrixSize);
-        randMatrix(B, matrixSize);
-        for(currentOp = 0; currentOp < NUM_OPS; ++currentOp) {
-            start = clock();
-            double* C = (*mmOps[currentOp]) (A, B, matrixSize);
-            end = clock();
-            cpuTimes[NUM_OPS * n + currentOp] = getTimeUsed(start, end);
-            cMatricies[NUM_OPS * n + currentOp] = C;
+    int i;
+    for(i = 0; i < NUM_RUNS; ++i) {
+        for(n = 0; n < NUM_TESTS; ++n) {
+            int matrixSize = n * STEP_SIZE + MIN_SIZE;
+            double* A = malloc(sizeof(double) * matrixSize * matrixSize);
+            double* B = malloc(sizeof(double) * matrixSize * matrixSize);
+            randMatrix(A, matrixSize);
+            randMatrix(B, matrixSize);
+            for(currentOp = 0; currentOp < NUM_OPS; ++currentOp) {
+                start = clock();
+                double* C = (*mmOps[currentOp]) (A, B, matrixSize);
+                end = clock();
+                cpuTimes[NUM_OPS * n + currentOp] += getTimeUsed(start, end);
+                if (i == NUM_RUNS - 1) cMatricies[NUM_OPS * n + currentOp] = C;
+                else free(C);
+            }
+            free(A);
+            free(B);
         }
-        free(A);
-        free(B);
     }
 
     // Output the results and free memory
     outputResults(cpuTimes, cMatricies, NUM_TESTS, NUM_OPS);
     freeMatricies(cMatricies, NUM_TESTS, NUM_OPS);
 	return 0;
+}
+
+//=============================================================================
+// Fills an array with zeros
+//
+// INPUTS
+// arr: The array to be filled with zeros
+// n  : The size of the array
+//
+// OUTPUTS
+// None
+//
+// SIDE EFFECTS
+// The array arr is filled with zeros. Any previous data is lost
+void fillZero(double arr[], int n) {
+    int i;
+    for (i = 0; i < n; ++i) {
+        arr[i] = 0;
+    }
 }
 
 //=============================================================================
@@ -113,7 +139,8 @@ void outputResults(double cpuTimes[], double* matricies[], int rows, int cols) {
         int dim = i * STEP_SIZE + MIN_SIZE;
         printf("Test results for matrix of size %d by %d\n", dim, dim);
         for (j = 0; j < cols; ++j) {
-            printf("Time of mm%d: %f [seconds]\n", j + 1, cpuTimes[cols * i + j]);
+            printf("Time of mm%d: %f [seconds]\n", j + 1, 
+                   cpuTimes[cols * i + j] / NUM_RUNS);
             if (j == cols - 1) {
                 reportStats(matricies[cols * i + j - 1], 
                             matricies[cols * i + j], 
