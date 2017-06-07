@@ -22,7 +22,7 @@ const int NUM_OPS = 3; // Number of different types of matrix multiplication
 const int NUM_TESTS = 4; // Number of different test sizes
 const int MIN_SIZE = 1000; // The minimum dimension for the matrix
 const int STEP_SIZE = 500; // The amount to increase the dimension per test
-const int NUM_RUNS = 30; // The number of runs to average the results by
+const int NUM_RUNS = 10; // The number of runs to average the results by
 
 int main(void) {
     srand(time(NULL));

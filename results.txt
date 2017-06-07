@@ -1,0 +1,24 @@
+Test results for matrix of size 1000 by 1000
+Time of mm1: 6.885000 [seconds]
+Time of mm2: 4.443000 [seconds]
+Time of mm3: 2.192000 [seconds]
+Max error: 0.000000
+Mean Squared error: 0.000000
+Test results for matrix of size 1500 by 1500
+Time of mm1: 24.900000 [seconds]
+Time of mm2: 15.954000 [seconds]
+Time of mm3: 7.811000 [seconds]
+Max error: 0.000000
+Mean Squared error: 0.000000
+Test results for matrix of size 2000 by 2000
+Time of mm1: 82.435000 [seconds]
+Time of mm2: 54.254000 [seconds]
+Time of mm3: 27.677000 [seconds]
+Max error: 0.000000
+Mean Squared error: 0.000000
+Test results for matrix of size 2500 by 2500
+Time of mm1: 173.779000 [seconds]
+Time of mm2: 114.525000 [seconds]
+Time of mm3: 65.387000 [seconds]
+Max error: 0.000000
+Mean Squared error: 0.000000

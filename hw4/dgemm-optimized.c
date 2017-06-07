@@ -68,12 +68,12 @@ int main()
 			    c01 += a01*b11;
 			    c10 += a11*b10;
 			    c11 += a11*b11;
-                 }
-			 c[t]   = c00;
-			 c[t+1] = c01;
-			 c[tt]  = c10;
-			 c[tt+1]= c11;
-			}
+                 	}
+			c[t]   = c00;
+			c[t+1] = c01;
+			c[tt]  = c10;
+			c[tt+1]= c11;
+		    }
     end = clock();
     printf("Time for optimized version: %.6lf\n", (double)(end-start)/CLOCKS_PER_SEC);
 
